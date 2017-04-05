@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JavaScript / HTML</title>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+		<style>
+			#content{
+				width: 100%;
+			}
+			.news{
+				width: 95%;
+				height: auto;
+				display: inline-block;
+				padding: 5px auto 5px auto;
+			}
+			.news:hover{
+				background-color: #eee;
+			}
+
+			.news > img{
+				max-width: 5%;
+				margin: 1%;
+				float: left;
+			}
+			.news > .title{
+				font-size: 14px;
+				width: 91%;
+				height: 30px;
+				margin: 1px;
+				float: left;
+			}
+			.comment{
+				width: 91%;
+				height: auto;
+				float: left;
+			}
+		</style>
+
+	</head>
+	<body>
+		<button id="load">Загрузить записи</button>
+		<div id="content">
+		</div>
+
+	<script>
+		$(document).ready(function () {
+			$('#load').bind('click', function(){
+				$.getJSON( "https://www.reddit.com/r/funny/.json", function(data) {
+					$.each(data['data']['children'], function(key, val) {
+						$('<div class="news"></div>').attr('id', val['data']['id']).appendTo('#content');
+						$('<img>').attr('src', val['data']['thumbnail']).appendTo('[id='+val['data']['id']+']');
+						$('<a></a>').attr('href', val['data']['thumbnail']).attr({
+							class: 'title',
+							href: val['data']['url'],
+							target: '_blank'
+						}).text(val['data']['title']+' ('+val['data']['author']+')').appendTo('[id='+val['data']['id']+']');
+					});
+					$('button').remove();
+				});
+			});
+		});
+	</script>
+</body>
+</html>
